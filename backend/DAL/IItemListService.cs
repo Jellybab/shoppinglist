@@ -8,5 +8,6 @@ namespace backend
         List<Item> GetItems(bool isTesco);
         void DeleteItemById(int id, bool isTesco);
         Item AddItem(Item item, bool isTesco);
+        Item? UpdateItem(Item updatedItem, bool isTesco);
     }
 }

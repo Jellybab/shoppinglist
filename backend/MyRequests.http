@@ -1,41 +1,64 @@
-GET http://localhost:5276/tesco
+GET http://localhost:5276/api/tesco
 ###
 
-GET http://localhost:5276/asda
+GET http://localhost:5276/api/asda
 ###
 
-GET http://localhost:5276/tesco/1
+GET http://localhost:5276/api/tesco/1
 ###
 
-GET http://localhost:5276/asda/1
+GET http://localhost:5276/api/asda/1
 ###
 
-POST http://localhost:5276/tesco
+POST http://localhost:5276/api/tesco
+content-type: application/json
+
+{
+  "name": "milk",
+  "amount": 2,
+  "hasObtained": false
+}
+
+###
+
+PUT http://localhost:5276/api/tesco/1
 content-type: application/json
 
 {
   "id": 1,
+  "name": "not milk",
+  "amount": 2,
+  "hasObtained": false
+}
+
+###
+
+POST http://localhost:5276/api/asda
+content-type: application/json
+
+{
   "name": "milk",
   "amount": 1,
   "hasObtained": false
 }
 ###
 
-POST http://localhost:5276/asda
+PUT http://localhost:5276/api/asda/1
 content-type: application/json
 
 {
   "id": 1,
-  "name": "milk",
-  "amount": 1,
+  "name": "not milk",
+  "amount": 2,
   "hasObtained": false
 }
-###
-
-DELETE http://localhost:5276/tesco/1
 
 ###
 
-DELETE http://localhost:5276/asda/1
+DELETE http://localhost:5276/api/tesco/1
+
+###
+
+DELETE http://localhost:5276/api/asda/1
 
 ###
