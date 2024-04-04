@@ -22,7 +22,7 @@ function ItemList({ apiUrl }) {
     fetchData();
   }, [fetchData]);
 
-  
+
   const handleCreate = async (newItem) => {
     try {
       const response = await axios.post(apiUrl, newItem);
@@ -37,7 +37,7 @@ function ItemList({ apiUrl }) {
     try {
       const response = await axios.put(`${apiUrl}`, updatedItem);
       setItems(items.map(item => (item.id == response.data.id ? response.data : item)));
-    } catch (error){
+    } catch (error) {
       setError(error);
     }
   };
@@ -52,19 +52,19 @@ function ItemList({ apiUrl }) {
   };
 
   const toggleEditMode = (id) => {
-    setItems(items.map(item => (item.id === id ? {...item, editMode: !item.editMode} : item)));
+    setItems(items.map(item => (item.id === id ? { ...item, editMode: !item.editMode } : item)));
   }
 
   return (
-    <div>
-      <div>
-        <button onClick={() => setShowForm(true)}>New Item</button>
+    <div className='container'>
+      <div className='d-flex'>
+        <h1 className="mx-auto">Item List</h1>
       </div>
-      <h1>Item List</h1>
+
       {error && <p>Error: {error.message}</p>}
-      <ul>
+      <ul className='container d-flex-col'>
         {Array.isArray(items) && items.map(item => (
-          <li key={item.id}>
+          <li key={item.id} className='row mt-2 border border-dark rounded'>
             {item.editMode ? (
               <NewItemForm
                 initialItem={item}
@@ -73,17 +73,26 @@ function ItemList({ apiUrl }) {
               />
             ) : (
               <>
-                <div>{item.amount} {item.name}</div>
-                <div>Has Obtained: {item.hasObtained ? 'Yes' : 'No'}</div>
-                <button onClick={() => toggleEditMode(item.id)}>Update</button>
-                <button onClick={() => handleDelete(item.id)}>Delete</button>
+                  <div className='d-flex justify-content-sm-around'>
+                  <div className='col align-self-center'>{item.amount}</div>
+                    <div className='col align-self-center'>
+                      {item.name}
+                  </div>
+                  {/* <div className='col-1'>Has Obtained: {item.hasObtained ? 'Yes' : 'No'}</div> */}
+                    <button className="btn btn-danger btn-sm col-1 mx-2 my-1 align-self-center" onClick={() => handleDelete(item.id)}>Del</button>
+                </div>
+                <button className="btn btn-primary btn-sm mt-1" onClick={() => toggleEditMode(item.id)}>Update</button>
               </>
             )}
           </li>
         ))}
-        {showForm && <NewItemForm onSubmit={handleCreate} />}
+        <div className='d-flex mt-2 row border border-dark rounded'>
+          {!showForm && <button className="btn btn-primary mx-auto" onClick={() => setShowForm(true)}>New Item</button>}
+          {showForm && <NewItemForm onSubmit={handleCreate} />}
+        </div>
+        
       </ul>
-      
+
     </div>
   );
 }

@@ -4,8 +4,8 @@ export default function Tesco() {
   return (
     <div className="Tesco">
       <header className="Tesco-header">
-        <ItemList apiUrl="/api/tesco" />
       </header>
+      <ItemList apiUrl="/api/tesco" />
     </div>
   );
 }
