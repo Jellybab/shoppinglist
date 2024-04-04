@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 function NewItemForm({ onSubmit, initialItem }) {
   const [formData, setFormData] = useState( initialItem || { name: '', amount: 0, hasObtained: false });
+  const [submitType] = useState(onSubmit.name == "handleCreate" ? "Create" : "Update");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -14,7 +15,7 @@ function NewItemForm({ onSubmit, initialItem }) {
     try {
       onSubmit(formData);
     } catch(error){
-      console.error('Error creating item:', error);
+      console.error(`Error ${submitType} item:`, error);
     }
   };
 
@@ -32,7 +33,7 @@ function NewItemForm({ onSubmit, initialItem }) {
         Has Obtained:
         <input type="checkbox" name="hasObtained" checked={formData.hasObtained} onChange={handleChange} />
       </label>
-      <button type="submit">Create</button>
+      <button type="submit">{submitType}</button>
     </form>
   );
 }

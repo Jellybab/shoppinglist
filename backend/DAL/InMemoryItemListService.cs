@@ -35,6 +35,7 @@ namespace backend
                 false);
             GetLocation(isTesco).Add(newItem);
             _lastItemId++;
+            Console.WriteLine($"New item created with ID: {newItem.Id}");
             return newItem;
         }
 

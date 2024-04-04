@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import NewItemForm from './NewItemForm.jsx'
 import axios from 'axios';
 import PropTypes from 'prop-types';
@@ -8,12 +8,7 @@ function ItemList({ apiUrl }) {
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const response = await axios.get(apiUrl);
       setItems(response.data);
@@ -21,8 +16,13 @@ function ItemList({ apiUrl }) {
     } catch (error) {
       setError(error);
     }
-  };
+  }, [apiUrl]);
 
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  
   const handleCreate = async (newItem) => {
     try {
       const response = await axios.post(apiUrl, newItem);
@@ -35,8 +35,8 @@ function ItemList({ apiUrl }) {
 
   const handleUpdate = async (updatedItem) => {
     try {
-      await axios.put(`${apiUrl}`, updatedItem);
-      setItems(items.map(item => (item.id === updatedItem.id ? updatedItem : item)));
+      const response = await axios.put(`${apiUrl}`, updatedItem);
+      setItems(items.map(item => (item.id == response.data.id ? response.data : item)));
     } catch (error){
       setError(error);
     }
@@ -51,6 +51,10 @@ function ItemList({ apiUrl }) {
     }
   };
 
+  const toggleEditMode = (id) => {
+    setItems(items.map(item => (item.id === id ? {...item, editMode: !item.editMode} : item)));
+  }
+
   return (
     <div>
       <div>
@@ -61,10 +65,20 @@ function ItemList({ apiUrl }) {
       <ul>
         {Array.isArray(items) && items.map(item => (
           <li key={item.id}>
-            <div>{item.amount} {item.name}</div>
-            <div>Has Obtained: {item.hasObtained ? 'Yes' : 'No'}</div>
-            <button onClick={() => handleUpdate(item)}>Update</button>
-            <button onClick={() => handleDelete(item.id)}>Delete</button>
+            {item.editMode ? (
+              <NewItemForm
+                initialItem={item}
+                onSubmit={handleUpdate}
+                onCancel={() => toggleEditMode(item.id)}
+              />
+            ) : (
+              <>
+                <div>{item.amount} {item.name}</div>
+                <div>Has Obtained: {item.hasObtained ? 'Yes' : 'No'}</div>
+                <button onClick={() => toggleEditMode(item.id)}>Update</button>
+                <button onClick={() => handleDelete(item.id)}>Delete</button>
+              </>
+            )}
           </li>
         ))}
         {showForm && <NewItemForm onSubmit={handleCreate} />}

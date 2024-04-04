@@ -29,6 +29,7 @@ app.MapGet("/api/asda/{id}", Results<Ok<Item>, NotFound> (int id, IItemListServi
     : TypedResults.Ok(targetItem);
 });
 
+//update item
 app.MapPut("/api/tesco/", async (Item updatedItem, IItemListService service) =>
 {
   var targetItem = await Task.Run(() => service.UpdateItem(updatedItem, true));
@@ -37,7 +38,7 @@ app.MapPut("/api/tesco/", async (Item updatedItem, IItemListService service) =>
     : Results.Ok(targetItem);
 });
 
-app.MapPut("/api/asda/", async (int id, Item updatedItem, IItemListService service) =>
+app.MapPut("/api/asda/", async (Item updatedItem, IItemListService service) =>
 {
   var targetItem = await Task.Run(() => service.UpdateItem(updatedItem, false));
   return targetItem is null
@@ -49,14 +50,14 @@ app.MapPut("/api/asda/", async (int id, Item updatedItem, IItemListService servi
 
 app.MapPost("/api/tesco", (Item item, IItemListService service) =>
 {
-  service.AddItem(item, tesco);
-  return TypedResults.Created("/api/tesco/{id}", item);
+  item = service.AddItem(item, tesco);
+  return TypedResults.Created($"/api/tesco/{item.Id}", item);
 });
 
 app.MapPost("/api/asda", (Item item, IItemListService service) =>
 {
-  service.AddItem(item, asda);
-  return TypedResults.Created("/api/asda/{id}", item);
+  item = service.AddItem(item, asda);
+  return TypedResults.Created($"/api/asda/{item.Id}", item);
 });
 
 //delete item
